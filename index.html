@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Villages Guide | ASU Polytechnic</title>
+    <script src="https://cdn.jsdelivr.net/npm/dearpdf@latest/dearpdf.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Roboto, sans-serif;
+        background: #f9f9f9;
+      }
+      header {
+        background-color: #8C1D40;
+        color: white;
+        padding: 1rem 2rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      header span {
+        border-bottom: 4px solid #FFC627;
+        padding-bottom: 4px;
+      }
+      main {
+        height: calc(100vh - 80px);
+      }
+    </style>
+  </head>
+  <body>
+    <header><span>Villages Guide | ASU Polytechnic</span></header>
+    <main>
+      <dearflip-brochure src="villagesguide.pdf" width="100%" height="100%"></dearflip-brochure>
+    </main>
+  </body>
+</html>
