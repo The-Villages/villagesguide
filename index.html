@@ -1,50 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Villages Guide | ASU Polytechnic</title>
-    <script src="https://cdn.jsdelivr.net/npm/dearpdf@latest/dearpdf.min.js"></script>
-    <style>
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Roboto, sans-serif;
-        background: #f9f9f9;
-      }
-      header {
-        background-color: #8C1D40;
-        color: white;
-        padding: 1rem 2rem;
-        text-align: center;
-        font-size: 1.5rem;
-        font-weight: bold;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
-      header span {
-        border-bottom: 4px solid #FFC627;
-        padding-bottom: 4px;
-      }
-      main {
-        height: calc(100vh - 80px);
-      }
-    </style>
-  </head>
-  <body>
-    <header><span>Villages Guide | ASU Polytechnic</span></header>
-    <main id="flipbook-container"></main>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const container = document.getElementById("flipbook-container");
-        const flipbook = document.createElement("dearflip-brochure");
-        flipbook.setAttribute("src", "villagesguide.pdf");
-        flipbook.setAttribute("width", "100%");
-        flipbook.setAttribute("height", "100%");
-        container.appendChild(flipbook);
-      });
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Villages Guide | ASU Polytechnic</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #f9f9f9;
+    }
+    header {
+      background-color: #8C1D40;
+      color: white;
+      padding: 1rem 2rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    header span {
+      border-bottom: 4px solid #FFC627;
+      padding-bottom: 4px;
+    }
+    #flipbook {
+      width: 90%;
+      height: 90vh;
+      margin: 20px auto;
+    }
+    .flipbook-page {
+      background: white;
+      border: 1px solid #ccc;
+      height: 100%;
+      padding: 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .flipbook-page img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
+</head>
+<body>
+  <header><span>Villages Guide | ASU Polytechnic</span></header>
+  <div id="flipbook">
+    <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
+    <div class="flipbook-page"><img src="2.jpg" alt="Page 2"></div>
+    <div class="flipbook-page"><img src="3.jpg" alt="Page 3"></div>
+    <div class="flipbook-page"><img src="4.jpg" alt="Page 4"></div>
+    <div class="flipbook-page"><img src="5.jpg" alt="Page 5"></div>
+    <div class="flipbook-page"><img src="6.jpg" alt="Page 6"></div>
+    <div class="flipbook-page"><img src="7.jpg" alt="Page 7"></div>
+    <div class="flipbook-page"><img src="8.jpg" alt="Page 8"></div>
+    <div class="flipbook-page"><img src="9.jpg" alt="Page 9"></div>
+    <div class="flipbook-page"><img src="10.jpg" alt="Page 10"></div>
+    <div class="flipbook-page"><img src="11.jpg" alt="Page 11"></div>
+    <div class="flipbook-page"><img src="12.jpg" alt="Page 12"></div>
+    <div class="flipbook-page"><img src="13.jpg" alt="Page 13"></div>
+    <div class="flipbook-page"><img src="14.jpg" alt="Page 14"></div>
+    <div class="flipbook-page"><img src="15.jpg" alt="Page 15"></div>
+    <div class="flipbook-page"><img src="16.jpg" alt="Page 16"></div>
+    <div class="flipbook-page"><img src="17.jpg" alt="Page 17"></div>
+    <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
+    <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
+    <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
+  </div>
+  <script>
+    $('#flipbook').turn({
+      width: 800,
+      height: 600,
+      autoCenter: true
+    });
+  </script>
+</body>
 </html>
