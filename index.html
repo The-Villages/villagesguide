@@ -34,8 +34,17 @@
   </head>
   <body>
     <header><span>Villages Guide | ASU Polytechnic</span></header>
-    <main>
-      <dearflip-brochure src="villagesguide.pdf" width="100%" height="100%"></dearflip-brochure>
-    </main>
+    <main id="flipbook-container"></main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const container = document.getElementById("flipbook-container");
+        const flipbook = document.createElement("dearflip-brochure");
+        flipbook.setAttribute("src", "villagesguide.pdf");
+        flipbook.setAttribute("width", "100%");
+        flipbook.setAttribute("height", "100%");
+        container.appendChild(flipbook);
+      });
+    </script>
   </body>
 </html>
