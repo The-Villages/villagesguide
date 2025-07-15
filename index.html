@@ -82,8 +82,8 @@
       #next { right: -25px; }
     }
   </style>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/turn.min.js"></script>
 </head>
 <body>
   <header>Villages Guide | ASU Polytechnic</header>
@@ -115,24 +115,14 @@
   </div>
 
   <script>
-    $(document).ready(function () {
+    $(function () {
       $('#flipbook').turn({
         width: 800,
         height: 600,
         autoCenter: true,
         elevation: 50,
         gradients: true,
-        display: 'double',
-        when: {
-          turning: function (event, page, view) {
-            var total = $('#flipbook').turn('pages');
-            if (page === 1 || page === total) {
-              $('#flipbook').turn('display', 'single');
-            } else {
-              $('#flipbook').turn('display', 'double');
-            }
-          }
-        }
+        display: 'double'
       });
 
       $('#prev').click(function () {
