@@ -51,28 +51,25 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: #8C1D40;
+      background: transparent;
       border: none;
-      color: white;
-      font-size: 2.2rem;
-      padding: 0.5rem 0.9rem;
-      border-radius: 50%;
+      color: #444;
+      font-size: 3rem;
       cursor: pointer;
       z-index: 100;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      transition: all 0.3s ease;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
     .nav-arrow:hover {
-      background: #A73450;
+      color: #222;
     }
-    #prev { left: -45px; }
-    #next { right: -45px; }
+    #prev { left: 10px; }
+    #next { right: 10px; }
 
     .fullscreen-btn {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background: #8C1D40;
+      background: #444;
       color: white;
       border: none;
       padding: 0.6rem 1.2rem;
@@ -82,31 +79,18 @@
       z-index: 2000;
       box-shadow: 0 2px 6px rgba(0,0,0,0.25);
     }
-
     .fullscreen-btn:hover {
-      background: #A73450;
+      background: #222;
     }
 
     @media (max-width: 768px) {
-      header {
-        font-size: 1.5rem;
-        padding: 0.8rem;
-      }
-      #flipbook {
-        height: 65vh;
-      }
-      .nav-arrow {
-        font-size: 1.8rem;
-        padding: 0.4rem 0.7rem;
-      }
-      #prev { left: -25px; }
-      #next { right: -25px; }
+      header { font-size: 1.5rem; padding: 0.8rem; }
+      #flipbook { height: 65vh; }
+      .nav-arrow { font-size: 2.2rem; }
     }
 
     @media (max-width: 500px) {
-      #flipbook {
-        height: 60vh;
-      }
+      #flipbook { height: 60vh; }
     }
   </style>
   <script src="js/jquery.min.js"></script>
@@ -140,19 +124,15 @@
     </div>
     <button id="next" class="nav-arrow">&#10095;</button>
   </div>
-
   <button class="fullscreen-btn" id="fullscreen-toggle">Enter Fullscreen</button>
 
   <script>
     let isFullscreen = false;
 
     function initFlipbook(displayMode) {
-      $('#flipbook').turn('destroy').html('');
-      let pages = '';
-      for (let i = 1; i <= 20; i++) {
-        pages += '<div class="flipbook-page"><img src="' + i + '.jpg" alt="Page ' + i + '"></div>';
+      if ($('#flipbook').data('turn')) {
+        $('#flipbook').turn('destroy');
       }
-      $('#flipbook').html(pages);
       $('#flipbook').turn({
         width: $('#flipbook').width(),
         height: $('#flipbook').height(),
@@ -175,23 +155,31 @@
       });
 
       $('#fullscreen-toggle').click(function () {
-        if (!isFullscreen) {
-          if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen();
-          }
-          initFlipbook('single');
-          $('#fullscreen-toggle').text('Exit Fullscreen');
+        const elem = document.documentElement;
+        if (!document.fullscreenElement) {
+          elem.requestFullscreen().then(() => {
+            isFullscreen = true;
+            initFlipbook('single');
+            $('#fullscreen-toggle').text('Exit Fullscreen');
+          });
         } else {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          }
+          document.exitFullscreen().then(() => {
+            isFullscreen = false;
+            initFlipbook('double');
+            $('#fullscreen-toggle').text('Enter Fullscreen');
+          });
+        }
+      });
+
+      document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement) {
+          isFullscreen = false;
           initFlipbook('double');
           $('#fullscreen-toggle').text('Enter Fullscreen');
         }
-        isFullscreen = !isFullscreen;
       });
 
-      $(window).resize(function () {
+      $(window).on('resize', function () {
         $('#flipbook').turn('size', $('#flipbook').width(), $('#flipbook').height());
       });
     });
