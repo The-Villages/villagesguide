@@ -2,144 +2,129 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Villages Guide | ASU Polytechnic</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    * { box-sizing: border-box; }
     body {
-      margin: 0 auto;
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background: #f3f3f3;
+      margin: 0;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background: #f9f9f9;
     }
+
     header {
       background-color: #8C1D40;
       color: white;
-      padding: 1rem;
+      padding: 20px;
       text-align: center;
-      font-size: 2.2rem;
-      font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    }
-    #flipbook-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 0;
-    }
-    #flipbook-container {
-      width: 100%;
-      max-width: 1000px; margin: 0 auto;
-      margin: 0 auto;
-      position: relative;
-    }
-    #flipbook {
-      width: 100%;
-      height: 70vh;
-      margin: auto;
-    }
-    .flipbook-page {
-      background: white;
-      height: 100%;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-    .flipbook-page img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+      font-size: 24px;
+      font-weight: bold;
     }
 
-    .nav-arrow {
+    #flipbook {
+      width: 1000px;
+      height: 650px;
+      margin: 30px auto;
+    }
+
+    .page {
+      background-color: white;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .turn-page {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
       background: transparent;
       border: none;
-      color: #444;
-      font-size: 3rem;
       cursor: pointer;
-      z-index: 100;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-    }
-    .nav-arrow:hover {
-      color: #222;
+      color: #666;
+      z-index: 1000;
+      text-shadow: 0 0 5px rgba(0,0,0,0.2);
     }
 
-    #prev { margin-right: 10px; }
-    #next { margin-left: 10px; }
+    #prevBtn {
+      left: 15px;
+    }
+
+    #nextBtn {
+      right: 15px;
+    }
 
     @media (max-width: 768px) {
-      header { font-size: 1.6rem; padding: 0.8rem; }
-      #flipbook { height: 60vh; }
-      .nav-arrow { font-size: 2.2rem; }
-    }
+      header {
+        font-size: 18px;
+        padding: 12px;
+      }
 
-    @media (max-width: 500px) {
-      #flipbook { height: 55vh; }
-      header { font-size: 1.4rem; padding: 0.6rem; }
+      #flipbook {
+        width: 90vw;
+        height: 80vh;
+        margin: 10px auto;
+      }
     }
   </style>
-  <script src="js/jquery.min.js"></script>
-  <script src="js/turn.min.js"></script>
 </head>
 <body>
   <header>Villages Guide | ASU Polytechnic</header>
-  <div id="flipbook-wrapper">
-    <button id="prev" class="nav-arrow">&#10094;</button>
-    <div id="flipbook-container">
-      <div id="flipbook">
-        <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
-        <div class="flipbook-page"><img src="2.jpg" alt="Page 2"></div>
-        <div class="flipbook-page"><img src="3.jpg" alt="Page 3"></div>
-        <div class="flipbook-page"><img src="4.jpg" alt="Page 4"></div>
-        <div class="flipbook-page"><img src="5.jpg" alt="Page 5"></div>
-        <div class="flipbook-page"><img src="6.jpg" alt="Page 6"></div>
-        <div class="flipbook-page"><img src="7.jpg" alt="Page 7"></div>
-        <div class="flipbook-page"><img src="8.jpg" alt="Page 8"></div>
-        <div class="flipbook-page"><img src="9.jpg" alt="Page 9"></div>
-        <div class="flipbook-page"><img src="10.jpg" alt="Page 10"></div>
-        <div class="flipbook-page"><img src="11.jpg" alt="Page 11"></div>
-        <div class="flipbook-page"><img src="12.jpg" alt="Page 12"></div>
-        <div class="flipbook-page"><img src="13.jpg" alt="Page 13"></div>
-        <div class="flipbook-page"><img src="14.jpg" alt="Page 14"></div>
-        <div class="flipbook-page"><img src="15.jpg" alt="Page 15"></div>
-        <div class="flipbook-page"><img src="16.jpg" alt="Page 16"></div>
-        <div class="flipbook-page"><img src="17.jpg" alt="Page 17"></div>
-        <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
-        <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
-        <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
-      </div>
-    </div>
-    <button id="next" class="nav-arrow">&#10095;</button>
+
+  <button id="prevBtn" class="nav-button"><i class="fas fa-chevron-left"></i></button>
+  <button id="nextBtn" class="nav-button"><i class="fas fa-chevron-right"></i></button>
+
+  <div id="flipbook">
+    <!-- Replace with actual number of pages -->
+    <div class="page" style="background-image: url('images/1.jpg');"></div>
+    <div class="page" style="background-image: url('images/2.jpg');"></div>
+    <div class="page" style="background-image: url('images/3.jpg');"></div>
+    <div class="page" style="background-image: url('images/4.jpg');"></div>
+    <div class="page" style="background-image: url('images/5.jpg');"></div>
+    <div class="page" style="background-image: url('images/6.jpg');"></div>
+    <div class="page" style="background-image: url('images/7.jpg');"></div>
+    <div class="page" style="background-image: url('images/8.jpg');"></div>
+    <div class="page" style="background-image: url('images/9.jpg');"></div>
+    <div class="page" style="background-image: url('images/10.jpg');"></div>
+    <div class="page" style="background-image: url('images/11.jpg');"></div>
+    <div class="page" style="background-image: url('images/12.jpg');"></div>
+    <div class="page" style="background-image: url('images/13.jpg');"></div>
+    <div class="page" style="background-image: url('images/14.jpg');"></div>
+    <div class="page" style="background-image: url('images/15.jpg');"></div>
+    <div class="page" style="background-image: url('images/16.jpg');"></div>
+    <div class="page" style="background-image: url('images/17.jpg');"></div>
+    <div class="page" style="background-image: url('images/18.jpg');"></div>
+    <div class="page" style="background-image: url('images/19.jpg');"></div>
+    <div class="page" style="background-image: url('images/20.jpg');"></div>
   </div>
 
+  <script src="js/jquery.min.js"></script>
+  <script src="js/turn.min.js"></script>
   <script>
-    function getDisplayMode() {
-      return window.innerWidth < 768 ? 'single' : 'double';
-    }
+    $(document).ready(function () {
+      const isMobile = window.innerWidth < 768;
 
-    function initFlipbook() {
-      if ($('#flipbook').data('turn')) {
-        $('#flipbook').turn('destroy');
-      }
       $('#flipbook').turn({
-        width: $('#flipbook-container').width(),
-        height: $('#flipbook').height(),
+        width: isMobile ? 360 : 1000,
+        height: isMobile ? 500 : 650,
         autoCenter: true,
+        display: isMobile ? 'single' : 'double',
         elevation: 50,
-        gradients: true,
-        display: getDisplayMode()
+        gradients: true
       });
-    }
 
-    $(function () {
-      initFlipbook();
+      $('#nextBtn').click(function () {
+        $('#flipbook').turn('next');
+      });
 
-      $('#prev').click(() => $('#flipbook').turn('previous'));
-      $('#next').click(() => $('#flipbook').turn('next'));
-
-      $(window).on('resize', () => {
-        initFlipbook();
+      $('#prevBtn').click(function () {
+        $('#flipbook').turn('previous');
       });
     });
   </script>
