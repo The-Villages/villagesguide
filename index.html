@@ -128,6 +128,25 @@
         font-size: 2rem;
       }
     }
+    .bottom-download-wrapper {
+      text-align: center;
+      margin: 30px auto 40px;
+    }
+    
+    .bottom-download-btn {
+      background-color: #e0e0e0;
+      color: #333;
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+    
+    .bottom-download-btn:hover {
+      background-color: #cccccc;
+    }
 
   </style>
   <script src="js/jquery.min.js"></script>
@@ -195,5 +214,8 @@
       });
     });
   </script>
+  <div class="bottom-download-wrapper">
+    <a href="villagesguide.pdf" download class="bottom-download-btn">Download PDF</a>
+  </div>
 </body>
 </html>
