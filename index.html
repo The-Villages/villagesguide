@@ -87,6 +87,26 @@
     .nav-arrow:hover {
       color: #222;
     }
+
+    .arrow-wrapper {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 80px;          /* Larger clickable width */
+      height: 120px;        /* Taller clickable height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #prev-wrapper {
+      left: 0;
+    }
+    
+    #next-wrapper {
+      right: 0;
+    }
+
     
     #flipbook .turn-page img {
       width: 100% !important;
@@ -136,7 +156,9 @@
 <body>
   <header>Villages Guide | ASU Polytechnic</header>
   <div id="flipbook-wrapper">
-    <button id="prev" class="nav-arrow">&#10094;</button>
+    <div class="arrow-wrapper" id="prev-wrapper">
+      <button id="prev" class="nav-arrow">&#10094;</button>
+    </div>
     <div id="flipbook-container">
       <div id="flipbook">
         <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
@@ -161,7 +183,9 @@
         <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
       </div>
     </div>
-    <button id="next" class="nav-arrow">&#10095;</button>
+    <div class="arrow-wrapper" id="next-wrapper">
+      <button id="next" class="nav-arrow">&#10095;</button>
+    </div>
   </div>
 
   <script>
