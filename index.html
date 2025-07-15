@@ -114,6 +114,10 @@
   </div>
 
   <script>
+    function getDisplayMode() {
+      return window.innerWidth < 768 ? 'single' : 'double';
+    }
+
     function initFlipbook() {
       if ($('#flipbook').data('turn')) {
         $('#flipbook').turn('destroy');
@@ -124,7 +128,7 @@
         autoCenter: true,
         elevation: 50,
         gradients: true,
-        display: 'double'
+        display: getDisplayMode()
       });
     }
 
@@ -135,7 +139,7 @@
       $('#next').click(() => $('#flipbook').turn('next'));
 
       $(window).on('resize', () => {
-        $('#flipbook').turn('size', $('#flipbook-container').width(), $('#flipbook').height());
+        initFlipbook();
       });
     });
   </script>
