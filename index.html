@@ -125,23 +125,24 @@
   </div>
 
   <script>
-    function getDisplayMode() {
-      return window.innerWidth < 768 ? 'single' : 'double';
-    }
-
     function initFlipbook() {
       if ($('#flipbook').data('turn')) {
         $('#flipbook').turn('destroy');
       }
+    
+      const isMobile = window.innerWidth < 768;
+      const containerWidth = isMobile ? $('#flipbook-container').width() : $('#flipbook-container').width() + 16;
+    
       $('#flipbook').turn({
-        width: $('#flipbook-container').width(),
+        width: containerWidth,
         height: $('#flipbook').height(),
         autoCenter: true,
         elevation: 50,
         gradients: true,
-        display: getDisplayMode()
+        display: isMobile ? 'single' : 'double'
       });
     }
+
 
     $(function () {
       initFlipbook();
