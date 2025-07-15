@@ -10,7 +10,6 @@
       margin: 0;
       font-family: "Segoe UI", Roboto, sans-serif;
       background: #f3f3f3;
-      padding: 0 10px;
     }
     header {
       background-color: #8C1D40;
@@ -21,16 +20,21 @@
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
+    #flipbook-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0;
+    }
     #flipbook-container {
       width: 100%;
       max-width: 1000px;
-      margin: 0 auto;
+      margin: 0 10px;
       position: relative;
-      padding: 20px 0;
     }
     #flipbook {
       width: 100%;
-      height: 75vh;
+      height: 70vh;
       margin: auto;
     }
     .flipbook-page {
@@ -49,9 +53,6 @@
     }
 
     .nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
       background: transparent;
       border: none;
       color: #444;
@@ -63,19 +64,18 @@
     .nav-arrow:hover {
       color: #222;
     }
-    #prev { left: 10px; }
-    #next { right: 10px; }
+
+    #prev { margin-right: 10px; }
+    #next { margin-left: 10px; }
 
     @media (max-width: 768px) {
-      body { padding: 0 8px; }
       header { font-size: 1.6rem; padding: 0.8rem; }
-      #flipbook { height: 65vh; }
+      #flipbook { height: 60vh; }
       .nav-arrow { font-size: 2.2rem; }
     }
 
     @media (max-width: 500px) {
-      body { padding: 0 6px; }
-      #flipbook { height: 60vh; }
+      #flipbook { height: 55vh; }
       header { font-size: 1.4rem; padding: 0.6rem; }
     }
   </style>
@@ -84,29 +84,31 @@
 </head>
 <body>
   <header>Villages Guide | ASU Polytechnic</header>
-  <div id="flipbook-container">
+  <div id="flipbook-wrapper">
     <button id="prev" class="nav-arrow">&#10094;</button>
-    <div id="flipbook">
-      <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
-      <div class="flipbook-page"><img src="2.jpg" alt="Page 2"></div>
-      <div class="flipbook-page"><img src="3.jpg" alt="Page 3"></div>
-      <div class="flipbook-page"><img src="4.jpg" alt="Page 4"></div>
-      <div class="flipbook-page"><img src="5.jpg" alt="Page 5"></div>
-      <div class="flipbook-page"><img src="6.jpg" alt="Page 6"></div>
-      <div class="flipbook-page"><img src="7.jpg" alt="Page 7"></div>
-      <div class="flipbook-page"><img src="8.jpg" alt="Page 8"></div>
-      <div class="flipbook-page"><img src="9.jpg" alt="Page 9"></div>
-      <div class="flipbook-page"><img src="10.jpg" alt="Page 10"></div>
-      <div class="flipbook-page"><img src="11.jpg" alt="Page 11"></div>
-      <div class="flipbook-page"><img src="12.jpg" alt="Page 12"></div>
-      <div class="flipbook-page"><img src="13.jpg" alt="Page 13"></div>
-      <div class="flipbook-page"><img src="14.jpg" alt="Page 14"></div>
-      <div class="flipbook-page"><img src="15.jpg" alt="Page 15"></div>
-      <div class="flipbook-page"><img src="16.jpg" alt="Page 16"></div>
-      <div class="flipbook-page"><img src="17.jpg" alt="Page 17"></div>
-      <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
-      <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
-      <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
+    <div id="flipbook-container">
+      <div id="flipbook">
+        <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
+        <div class="flipbook-page"><img src="2.jpg" alt="Page 2"></div>
+        <div class="flipbook-page"><img src="3.jpg" alt="Page 3"></div>
+        <div class="flipbook-page"><img src="4.jpg" alt="Page 4"></div>
+        <div class="flipbook-page"><img src="5.jpg" alt="Page 5"></div>
+        <div class="flipbook-page"><img src="6.jpg" alt="Page 6"></div>
+        <div class="flipbook-page"><img src="7.jpg" alt="Page 7"></div>
+        <div class="flipbook-page"><img src="8.jpg" alt="Page 8"></div>
+        <div class="flipbook-page"><img src="9.jpg" alt="Page 9"></div>
+        <div class="flipbook-page"><img src="10.jpg" alt="Page 10"></div>
+        <div class="flipbook-page"><img src="11.jpg" alt="Page 11"></div>
+        <div class="flipbook-page"><img src="12.jpg" alt="Page 12"></div>
+        <div class="flipbook-page"><img src="13.jpg" alt="Page 13"></div>
+        <div class="flipbook-page"><img src="14.jpg" alt="Page 14"></div>
+        <div class="flipbook-page"><img src="15.jpg" alt="Page 15"></div>
+        <div class="flipbook-page"><img src="16.jpg" alt="Page 16"></div>
+        <div class="flipbook-page"><img src="17.jpg" alt="Page 17"></div>
+        <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
+        <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
+        <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
+      </div>
     </div>
     <button id="next" class="nav-arrow">&#10095;</button>
   </div>
@@ -118,7 +120,7 @@
       }
       $('#flipbook').turn({
         width: $('#flipbook-container').width(),
-        height: window.innerHeight * 0.75,
+        height: $('#flipbook').height(),
         autoCenter: true,
         elevation: 50,
         gradients: true,
@@ -133,7 +135,7 @@
       $('#next').click(() => $('#flipbook').turn('next'));
 
       $(window).on('resize', () => {
-        $('#flipbook').turn('size', $('#flipbook-container').width(), window.innerHeight * 0.75);
+        $('#flipbook').turn('size', $('#flipbook-container').width(), $('#flipbook').height());
       });
     });
   </script>
