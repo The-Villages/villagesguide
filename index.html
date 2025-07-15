@@ -71,27 +71,47 @@
     #next { margin-left: 10px; }
 
     @media (max-width: 768px) {
-      header { font-size: 1.6rem; padding: 0.8rem; }
-      #flipbook { height: 60vh; }
-      .nav-arrow { font-size: 2.2rem; }
+      header {
+        font-size: 1.6rem;
+        padding: 0.8rem;
+      }
+    
+      #flipbook {
+        max-width: 100%;
+        max-height: 82vh;
+        margin: 0 auto;
+        padding: 0;
+      }
+    
+      #flipbook .turn-page {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+      }
+    
+      #flipbook .turn-page img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+      }
+    
+      .nav-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2.4rem;
+        z-index: 100;
+      }
+    
+      #prev {
+        left: 10px;
+      }
+    
+      #next {
+        right: 10px;
+      }
     }
 
-    @media (max-width: 500px) {
-      #flipbook { height: 55vh; }
-      header { font-size: 1.4rem; padding: 0.6rem; }
-    }
-    
-    #flipbook .turn-page img {
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: contain !important;
-    }
-    
-    #flipbook .page-wrapper {
-      margin: 0 !important;
-      padding: 0 !important;
-      gap: 0 !important;
-    }
   
   </style>
   <script src="js/jquery.min.js"></script>
