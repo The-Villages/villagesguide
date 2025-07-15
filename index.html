@@ -5,74 +5,142 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Villages Guide | ASU Polytechnic</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: "Segoe UI", Roboto, sans-serif;
-      background: #f9f9f9;
+      background: #f3f3f3;
     }
     header {
       background-color: #8C1D40;
       color: white;
-      padding: 1rem 2rem;
+      padding: 1rem;
       text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      font-size: 1.8rem;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
-    header span {
-      border-bottom: 4px solid #FFC627;
-      padding-bottom: 4px;
+    #flipbook-container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      padding: 20px 0;
     }
     #flipbook {
-      width: 90%;
-      height: 90vh;
-      margin: 20px auto;
+      width: 100%;
+      height: 600px;
+      margin: auto;
     }
     .flipbook-page {
       background: white;
-      border: 1px solid #ccc;
       height: 100%;
-      padding: 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     .flipbook-page img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.3);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      padding: 0.5rem 1rem;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 100;
+      transition: background 0.3s;
+    }
+    .nav-arrow:hover {
+      background: rgba(0,0,0,0.5);
+    }
+    #prev { left: -40px; }
+    #next { right: -40px; }
+
+    @media (max-width: 768px) {
+      header {
+        font-size: 1.4rem;
+      }
+      #flipbook {
+        height: 500px;
+      }
+      .nav-arrow {
+        font-size: 1.5rem;
+        padding: 0.3rem 0.6rem;
+      }
+      #prev { left: -25px; }
+      #next { right: -25px; }
+    }
   </style>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
 </head>
 <body>
-  <header><span>Villages Guide | ASU Polytechnic</span></header>
-  <div id="flipbook">
-    <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
-    <div class="flipbook-page"><img src="2.jpg" alt="Page 2"></div>
-    <div class="flipbook-page"><img src="3.jpg" alt="Page 3"></div>
-    <div class="flipbook-page"><img src="4.jpg" alt="Page 4"></div>
-    <div class="flipbook-page"><img src="5.jpg" alt="Page 5"></div>
-    <div class="flipbook-page"><img src="6.jpg" alt="Page 6"></div>
-    <div class="flipbook-page"><img src="7.jpg" alt="Page 7"></div>
-    <div class="flipbook-page"><img src="8.jpg" alt="Page 8"></div>
-    <div class="flipbook-page"><img src="9.jpg" alt="Page 9"></div>
-    <div class="flipbook-page"><img src="10.jpg" alt="Page 10"></div>
-    <div class="flipbook-page"><img src="11.jpg" alt="Page 11"></div>
-    <div class="flipbook-page"><img src="12.jpg" alt="Page 12"></div>
-    <div class="flipbook-page"><img src="13.jpg" alt="Page 13"></div>
-    <div class="flipbook-page"><img src="14.jpg" alt="Page 14"></div>
-    <div class="flipbook-page"><img src="15.jpg" alt="Page 15"></div>
-    <div class="flipbook-page"><img src="16.jpg" alt="Page 16"></div>
-    <div class="flipbook-page"><img src="17.jpg" alt="Page 17"></div>
-    <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
-    <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
-    <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
+  <header>Villages Guide | ASU Polytechnic</header>
+  <div id="flipbook-container">
+    <button id="prev" class="nav-arrow">&#10094;</button>
+    <div id="flipbook">
+      <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
+      <div class="flipbook-page"><img src="2.jpg" alt="Page 2"></div>
+      <div class="flipbook-page"><img src="3.jpg" alt="Page 3"></div>
+      <div class="flipbook-page"><img src="4.jpg" alt="Page 4"></div>
+      <div class="flipbook-page"><img src="5.jpg" alt="Page 5"></div>
+      <div class="flipbook-page"><img src="6.jpg" alt="Page 6"></div>
+      <div class="flipbook-page"><img src="7.jpg" alt="Page 7"></div>
+      <div class="flipbook-page"><img src="8.jpg" alt="Page 8"></div>
+      <div class="flipbook-page"><img src="9.jpg" alt="Page 9"></div>
+      <div class="flipbook-page"><img src="10.jpg" alt="Page 10"></div>
+      <div class="flipbook-page"><img src="11.jpg" alt="Page 11"></div>
+      <div class="flipbook-page"><img src="12.jpg" alt="Page 12"></div>
+      <div class="flipbook-page"><img src="13.jpg" alt="Page 13"></div>
+      <div class="flipbook-page"><img src="14.jpg" alt="Page 14"></div>
+      <div class="flipbook-page"><img src="15.jpg" alt="Page 15"></div>
+      <div class="flipbook-page"><img src="16.jpg" alt="Page 16"></div>
+      <div class="flipbook-page"><img src="17.jpg" alt="Page 17"></div>
+      <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
+      <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
+      <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
+    </div>
+    <button id="next" class="nav-arrow">&#10095;</button>
   </div>
+
   <script>
-    $('#flipbook').turn({
-      width: 800,
-      height: 600,
-      autoCenter: true
+    $(document).ready(function () {
+      $('#flipbook').turn({
+        width: 800,
+        height: 600,
+        autoCenter: true,
+        elevation: 50,
+        gradients: true,
+        display: 'double',
+        when: {
+          turning: function (event, page, view) {
+            var total = $('#flipbook').turn('pages');
+            if (page === 1 || page === total) {
+              $('#flipbook').turn('display', 'single');
+            } else {
+              $('#flipbook').turn('display', 'double');
+            }
+          }
+        }
+      });
+
+      $('#prev').click(function () {
+        $('#flipbook').turn('previous');
+      });
+      $('#next').click(function () {
+        $('#flipbook').turn('next');
+      });
     });
   </script>
 </body>
