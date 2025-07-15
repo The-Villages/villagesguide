@@ -78,15 +78,24 @@
       #flipbook { height: 55vh; }
       header { font-size: 1.4rem; padding: 0.6rem; }
     }
-    #flipbook .turn-page {
-      margin: 0 !important;
+    .turn-page {
       padding: 0 !important;
+      margin: 0 !important;
       border: none !important;
+      width: 100% !important;
+      overflow: hidden !important;
+    }
+    
+    #flipbook .turn-page img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
     }
     
     #flipbook .page-wrapper {
-      gap: 0 !important;
+      margin: 0 !important;
       padding: 0 !important;
+      gap: 0 !important;
     }
 
   </style>
