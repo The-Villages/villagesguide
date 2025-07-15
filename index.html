@@ -66,24 +66,6 @@
     #prev { left: 10px; }
     #next { right: 10px; }
 
-    .fullscreen-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #444;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
-      font-size: 1rem;
-      cursor: pointer;
-      z-index: 2000;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-    }
-    .fullscreen-btn:hover {
-      background: #222;
-    }
-
     @media (max-width: 768px) {
       body { padding: 0 8px; }
       header { font-size: 1.6rem; padding: 0.8rem; }
@@ -128,68 +110,30 @@
     </div>
     <button id="next" class="nav-arrow">&#10095;</button>
   </div>
-  <button class="fullscreen-btn" id="fullscreen-toggle">Enter Fullscreen</button>
 
   <script>
-    let isFullscreen = false;
-
-    function initFlipbook(displayMode) {
+    function initFlipbook() {
       if ($('#flipbook').data('turn')) {
         $('#flipbook').turn('destroy');
       }
       $('#flipbook').turn({
         width: $('#flipbook-container').width(),
-        height: window.innerHeight * 0.8,
+        height: window.innerHeight * 0.75,
         autoCenter: true,
         elevation: 50,
         gradients: true,
-        display: displayMode,
-        when: {
-          turning: function(event, page, view) {
-            const total = $('#flipbook').turn('pages');
-            if (page === 1 || page === total) {
-              $('#flipbook').turn('display', 'single');
-            } else if (!isFullscreen) {
-              $('#flipbook').turn('display', 'double');
-            }
-          }
-        }
+        display: 'double'
       });
     }
 
     $(function () {
-      initFlipbook('double');
+      initFlipbook();
 
       $('#prev').click(() => $('#flipbook').turn('previous'));
       $('#next').click(() => $('#flipbook').turn('next'));
 
-      $('#fullscreen-toggle').click(() => {
-        const elem = document.documentElement;
-        if (!document.fullscreenElement) {
-          elem.requestFullscreen().then(() => {
-            isFullscreen = true;
-            initFlipbook('single');
-            $('#fullscreen-toggle').text('Exit Fullscreen');
-          });
-        } else {
-          document.exitFullscreen().then(() => {
-            isFullscreen = false;
-            initFlipbook('double');
-            $('#fullscreen-toggle').text('Enter Fullscreen');
-          });
-        }
-      });
-
-      document.addEventListener("fullscreenchange", () => {
-        if (!document.fullscreenElement) {
-          isFullscreen = false;
-          $('#fullscreen-toggle').text('Enter Fullscreen');
-          initFlipbook('double');
-        }
-      });
-
-      $(window).on('resize', function () {
-        $('#flipbook').turn('size', $('#flipbook-container').width(), window.innerHeight * 0.8);
+      $(window).on('resize', () => {
+        $('#flipbook').turn('size', $('#flipbook-container').width(), window.innerHeight * 0.75);
       });
     });
   </script>
