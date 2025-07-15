@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Villages Guide | ASU Polytechnic</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+    
     body {
       margin: 0 auto;
       font-family: "Segoe UI", Roboto, sans-serif;
       background: #f3f3f3;
     }
+    
     header {
       background-color: #8C1D40;
       color: white;
@@ -20,18 +24,21 @@
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
+    
     #flipbook-wrapper {
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px 0;
     }
+    
     #flipbook-container {
       width: 100%;
-      max-width: 1000px; margin: 0 auto;
+      max-width: 1000px;
       margin: 0 auto;
       position: relative;
     }
+    
     #flipbook {
       aspect-ratio: 13 / 20;
       width: 100%;
@@ -39,6 +46,7 @@
       max-height: 82vh;
       margin: auto;
     }
+    
     .flipbook-page {
       background: white;
       height: 100%;
@@ -48,12 +56,13 @@
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
+    
     .flipbook-page img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
-
+    
     .nav-arrow {
       background: transparent;
       border: none;
@@ -61,15 +70,37 @@
       font-size: 3rem;
       cursor: pointer;
       z-index: 100;
-      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
     }
+    
+    #prev {
+      left: 10px;
+    }
+    
+    #next {
+      right: 10px;
+    }
+    
     .nav-arrow:hover {
       color: #222;
     }
-
-    #prev { margin-right: 10px; }
-    #next { margin-left: 10px; }
-
+    
+    #flipbook .turn-page img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain !important;
+    }
+    
+    #flipbook .page-wrapper {
+      margin: 0 !important;
+      padding: 0 !important;
+      gap: 0 !important;
+    }
+    
+    /* Mobile-specific fixes */
     @media (max-width: 768px) {
       header {
         font-size: 1.6rem;
@@ -80,39 +111,24 @@
         max-width: 100%;
         max-height: 82vh;
         margin: 0 auto;
-        padding: 0;
-      }
-    
-      #flipbook .turn-page {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
-      }
-    
-      #flipbook .turn-page img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: contain !important;
       }
     
       .nav-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 2.4rem;
-        z-index: 100;
+        font-size: 2.2rem;
+      }
+    }
+    
+    @media (max-width: 500px) {
+      header {
+        font-size: 1.4rem;
+        padding: 0.6rem;
       }
     
-      #prev {
-        left: 10px;
-      }
-    
-      #next {
-        right: 10px;
+      .nav-arrow {
+        font-size: 2rem;
       }
     }
 
-  
   </style>
   <script src="js/jquery.min.js"></script>
   <script src="js/turn.min.js"></script>
