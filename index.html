@@ -10,6 +10,7 @@
       margin: 0;
       font-family: "Segoe UI", Roboto, sans-serif;
       background: #f3f3f3;
+      padding: 0 10px;
     }
     header {
       background-color: #8C1D40;
@@ -84,13 +85,16 @@
     }
 
     @media (max-width: 768px) {
-      header { font-size: 1.5rem; padding: 0.8rem; }
+      body { padding: 0 8px; }
+      header { font-size: 1.6rem; padding: 0.8rem; }
       #flipbook { height: 65vh; }
       .nav-arrow { font-size: 2.2rem; }
     }
 
     @media (max-width: 500px) {
+      body { padding: 0 6px; }
       #flipbook { height: 60vh; }
+      header { font-size: 1.4rem; padding: 0.6rem; }
     }
   </style>
   <script src="js/jquery.min.js"></script>
@@ -134,27 +138,32 @@
         $('#flipbook').turn('destroy');
       }
       $('#flipbook').turn({
-        width: $('#flipbook').width(),
-        height: $('#flipbook').height(),
+        width: $('#flipbook-container').width(),
+        height: window.innerHeight * 0.8,
         autoCenter: true,
         elevation: 50,
         gradients: true,
-        display: displayMode
+        display: displayMode,
+        when: {
+          turning: function(event, page, view) {
+            const total = $('#flipbook').turn('pages');
+            if (page === 1 || page === total) {
+              $('#flipbook').turn('display', 'single');
+            } else if (!isFullscreen) {
+              $('#flipbook').turn('display', 'double');
+            }
+          }
+        }
       });
     }
 
     $(function () {
       initFlipbook('double');
 
-      $('#prev').click(function () {
-        $('#flipbook').turn('previous');
-      });
+      $('#prev').click(() => $('#flipbook').turn('previous'));
+      $('#next').click(() => $('#flipbook').turn('next'));
 
-      $('#next').click(function () {
-        $('#flipbook').turn('next');
-      });
-
-      $('#fullscreen-toggle').click(function () {
+      $('#fullscreen-toggle').click(() => {
         const elem = document.documentElement;
         if (!document.fullscreenElement) {
           elem.requestFullscreen().then(() => {
@@ -174,13 +183,13 @@
       document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement) {
           isFullscreen = false;
-          initFlipbook('double');
           $('#fullscreen-toggle').text('Enter Fullscreen');
+          initFlipbook('double');
         }
       });
 
       $(window).on('resize', function () {
-        $('#flipbook').turn('size', $('#flipbook').width(), $('#flipbook').height());
+        $('#flipbook').turn('size', $('#flipbook-container').width(), window.innerHeight * 0.8);
       });
     });
   </script>
