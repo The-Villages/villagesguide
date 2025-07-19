@@ -198,11 +198,11 @@
         <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
         <div class="flipbook-page"><img src="21.jpg" alt="Page 21"></div>
         <!-- Desktop-only page -->
-        <div class="flipbook-page desktop-only"><img src="22.jpg" alt="Page 22"></div>
+        <div id="page-desktop-22" class="flipbook-page desktop-only"><img src="22.jpg" alt="Page 22"></div>
         <!-- Mobile-only page -->
-        <div class="flipbook-page mobile-only"><img src="22a.jpg" alt="Page 22 (Mobile)"></div>
+        <div id="page-mobile-22a" class="flipbook-page mobile-only"><img src="22a.jpg" alt="Page 22 (Mobile)"></div>
         <!-- Desktop-only continuation -->
-        <div class="flipbook-page desktop-only"><img src="23.jpg" alt="Page 23"></div>
+        <div id="page-desktop-23" class="flipbook-page desktop-only"><img src="23.jpg" alt="Page 23"></div>
         <div class="flipbook-page"><img src="24.jpg" alt="Page 25"></div>
       </div>
     </div>
@@ -216,6 +216,9 @@
       }
     
       const isMobile = window.innerWidth < 768;
+      $('#page-desktop-22, #page-desktop-23').toggle(!isMobile);
+      $('#page-mobile-22a').toggle(isMobile);
+
       const containerWidth = isMobile ? $('#flipbook-container').width() : $('#flipbook-container').width() + 16;
     
       $('#flipbook').turn({
