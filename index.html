@@ -8,13 +8,13 @@
     * {
       box-sizing: border-box;
     }
-    
+
     body {
       margin: 0 auto;
       font-family: "Segoe UI", Roboto, sans-serif;
       background: #f3f3f3;
     }
-    
+
     header {
       background-color: #8C1D40;
       color: white;
@@ -24,21 +24,21 @@
       font-weight: 600;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
-    
+
     #flipbook-wrapper {
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px 0;
     }
-    
+
     #flipbook-container {
       width: 100%;
       max-width: 1000px;
       margin: 0 auto;
       position: relative;
     }
-    
+
     #flipbook {
       aspect-ratio: 13 / 20;
       width: 100%;
@@ -46,7 +46,7 @@
       max-height: 82vh;
       margin: auto;
     }
-    
+
     .flipbook-page {
       background: white;
       height: 100%;
@@ -56,13 +56,13 @@
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
-    
+
     .flipbook-page img {
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
-    
+
     .nav-arrow {
       background: transparent;
       border: none;
@@ -75,64 +75,64 @@
       top: 50%;
       transform: translateY(-50%);
     }
-    
+
     #prev {
       left: 10px;
     }
-    
+
     #next {
       right: 10px;
     }
-    
+
     .nav-arrow:hover {
       color: #222;
     }
-    
+
     #flipbook .turn-page img {
       width: 100% !important;
       height: 100% !important;
       object-fit: contain !important;
     }
-    
+
     #flipbook .page-wrapper {
       margin: 0 !important;
       padding: 0 !important;
       gap: 0 !important;
     }
-    
-    /* Mobile-specific fixes */
+
     @media (max-width: 768px) {
       header {
         font-size: 1.6rem;
         padding: 0.8rem;
       }
-    
+
       #flipbook {
         max-width: 100%;
         max-height: 82vh;
         margin: 0 auto;
       }
-    
+
       .nav-arrow {
         font-size: 2.2rem;
       }
     }
-    
+
     @media (max-width: 500px) {
       header {
         font-size: 1.4rem;
         padding: 0.6rem;
       }
-    
+
       .nav-arrow {
         font-size: 2rem;
       }
     }
+
     .bottom-download-wrapper {
       text-align: center;
       margin: 15px auto 30px;
     }
-    
+
     .bottom-download-btn {
       background-color: #e0e0e0;
       color: #333;
@@ -143,28 +143,9 @@
       text-decoration: none;
       transition: background 0.2s ease;
     }
-    
+
     .bottom-download-btn:hover {
       background-color: #cccccc;
-    }
-    /* Show/hide certain pages based on device */
-    .mobile-only,
-    .desktop-only {
-      display: block;
-    }
-    
-    /* Hide desktop-only pages on mobile */
-    @media (max-width: 768px) {
-      .desktop-only {
-        display: none !important;
-      }
-    }
-    
-    /* Hide mobile-only pages on desktop */
-    @media (min-width: 769px) {
-      .mobile-only {
-        display: none !important;
-      }
     }
   </style>
   <script src="js/jquery.min.js"></script>
@@ -175,69 +156,41 @@
   <div id="flipbook-wrapper">
     <button id="prev" class="nav-arrow">&#10094;</button>
     <div id="flipbook-container">
-      <div id="flipbook">
-        <div class="flipbook-page"><img src="1.jpg" alt="Page 1"></div>
-        <div class="flipbook-page"><img src="2.jpg" alt="Page 2"></div>
-        <div class="flipbook-page"><img src="3.jpg" alt="Page 3"></div>
-        <div class="flipbook-page"><img src="4.jpg" alt="Page 4"></div>
-        <div class="flipbook-page"><img src="5.jpg" alt="Page 5"></div>
-        <div class="flipbook-page"><img src="6.jpg" alt="Page 6"></div>
-        <div class="flipbook-page"><img src="7.jpg" alt="Page 7"></div>
-        <div class="flipbook-page"><img src="8.jpg" alt="Page 8"></div>
-        <div class="flipbook-page"><img src="9.jpg" alt="Page 9"></div>
-        <div class="flipbook-page"><img src="10.jpg" alt="Page 10"></div>
-        <div class="flipbook-page"><img src="11.jpg" alt="Page 11"></div>
-        <div class="flipbook-page"><img src="12.jpg" alt="Page 12"></div>
-        <div class="flipbook-page"><img src="13.jpg" alt="Page 13"></div>
-        <div class="flipbook-page"><img src="14.jpg" alt="Page 14"></div>
-        <div class="flipbook-page"><img src="15.jpg" alt="Page 15"></div>
-        <div class="flipbook-page"><img src="16.jpg" alt="Page 16"></div>
-        <div class="flipbook-page"><img src="17.jpg" alt="Page 17"></div>
-        <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
-        <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
-        <div class="flipbook-page"><img src="20.jpg" alt="Page 20"></div>
-        <div class="flipbook-page"><img src="21.jpg" alt="Page 21"></div>
-        <!-- Desktop-only page -->
-        <div id="page-desktop-22" class="flipbook-page desktop-only"><img src="22.jpg" alt="Page 22"></div>
-        <!-- Mobile-only page -->
-        <div id="page-mobile-22a" class="flipbook-page mobile-only"><img src="22a.jpg" alt="Page 22 (Mobile)"></div>
-        <!-- Desktop-only continuation -->
-        <div id="page-desktop-23" class="flipbook-page desktop-only"><img src="23.jpg" alt="Page 23"></div>
-        <div id="page-24" class="flipbook-page"><img src="24.jpg" alt="Page 24"></div>
-      </div>
+      <div id="flipbook"></div>
     </div>
     <button id="next" class="nav-arrow">&#10095;</button>
   </div>
 
   <script>
+    function getPageHTML(src, alt) {
+      return `<div class="flipbook-page"><img src="${src}" alt="${alt}"></div>`;
+    }
+
     function initFlipbook() {
       if ($('#flipbook').data('turn')) {
-        $('#flipbook').turn('destroy');
+        $('#flipbook').turn('destroy').html('');
       }
-    
+
       const isMobile = window.innerWidth < 768;
-    
-      // Toggle special pages
-      $('#page-desktop-22, #page-desktop-23').toggle(!isMobile);
-      $('#page-mobile-22a').toggle(isMobile);
-    
-      // Fix page count if mobile by hiding last page if needed
-      if (isMobile) {
-        $('#page-24').show(); // Always show last page on mobile
-      } else {
-        // Count number of visible pages to ensure even pairing
-        const visiblePages = $('#flipbook .flipbook-page:visible').length;
-        if (visiblePages % 2 !== 0) {
-          $('#page-24').hide(); // hide if odd total to make it even
-        } else {
-          $('#page-24').show(); // show if it makes pairing complete
-        }
+
+      const basePages = [];
+      for (let i = 1; i <= 21; i++) {
+        basePages.push(getPageHTML(`${i}.jpg`, `Page ${i}`));
       }
-    
-      const containerWidth = isMobile ? $('#flipbook-container').width() : $('#flipbook-container').width() + 16;
-    
+
+      if (isMobile) {
+        basePages.push(getPageHTML(`22a.jpg`, `Page 22 (Mobile)`));
+      } else {
+        basePages.push(getPageHTML(`22.jpg`, `Page 22`));
+        basePages.push(getPageHTML(`23.jpg`, `Page 23`));
+      }
+
+      basePages.push(getPageHTML(`24.jpg`, `Page 24`));
+
+      $('#flipbook').html(basePages.join(''));
+
       $('#flipbook').turn({
-        width: containerWidth,
+        width: isMobile ? $('#flipbook-container').width() : $('#flipbook-container').width() + 16,
         height: $('#flipbook').height(),
         autoCenter: true,
         elevation: 50,
@@ -246,18 +199,14 @@
       });
     }
 
-
     $(function () {
       initFlipbook();
-
       $('#prev').click(() => $('#flipbook').turn('previous'));
       $('#next').click(() => $('#flipbook').turn('next'));
-
-      $(window).on('resize', () => {
-        initFlipbook();
-      });
+      $(window).on('resize', () => initFlipbook());
     });
   </script>
+
   <div class="bottom-download-wrapper">
     <a href="villagesguide.pdf" download class="bottom-download-btn">Download PDF</a>
   </div>
