@@ -203,7 +203,7 @@
         <div id="page-mobile-22a" class="flipbook-page mobile-only"><img src="22a.jpg" alt="Page 22 (Mobile)"></div>
         <!-- Desktop-only continuation -->
         <div id="page-desktop-23" class="flipbook-page desktop-only"><img src="23.jpg" alt="Page 23"></div>
-        <div class="flipbook-page"><img src="24.jpg" alt="Page 25"></div>
+        <div id="page-24" class="flipbook-page"><img src="24.jpg" alt="Page 24"></div>
       </div>
     </div>
     <button id="next" class="nav-arrow">&#10095;</button>
@@ -216,9 +216,24 @@
       }
     
       const isMobile = window.innerWidth < 768;
+    
+      // Toggle special pages
       $('#page-desktop-22, #page-desktop-23').toggle(!isMobile);
       $('#page-mobile-22a').toggle(isMobile);
-
+    
+      // Fix page count if mobile by hiding last page if needed
+      if (isMobile) {
+        $('#page-24').show(); // Always show last page on mobile
+      } else {
+        // Count number of visible pages to ensure even pairing
+        const visiblePages = $('#flipbook .flipbook-page:visible').length;
+        if (visiblePages % 2 !== 0) {
+          $('#page-24').hide(); // hide if odd total to make it even
+        } else {
+          $('#page-24').show(); // show if it makes pairing complete
+        }
+      }
+    
       const containerWidth = isMobile ? $('#flipbook-container').width() : $('#flipbook-container').width() + 16;
     
       $('#flipbook').turn({
