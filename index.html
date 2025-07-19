@@ -147,7 +147,25 @@
     .bottom-download-btn:hover {
       background-color: #cccccc;
     }
-
+    /* Show/hide certain pages based on device */
+    .mobile-only,
+    .desktop-only {
+      display: block;
+    }
+    
+    /* Hide desktop-only pages on mobile */
+    @media (max-width: 768px) {
+      .desktop-only {
+        display: none !important;
+      }
+    }
+    
+    /* Hide mobile-only pages on desktop */
+    @media (min-width: 769px) {
+      .mobile-only {
+        display: none !important;
+      }
+    }
   </style>
   <script src="js/jquery.min.js"></script>
   <script src="js/turn.min.js"></script>
@@ -178,9 +196,12 @@
         <div class="flipbook-page"><img src="18.jpg" alt="Page 18"></div>
         <div class="flipbook-page"><img src="19.jpg" alt="Page 19"></div>
         <div class="flipbook-page"><img src="20.jpg" alt="Page 21"></div>
-        <div class="flipbook-page"><img src="21.jpg" alt="Page 22"></div>
-        <div class="flipbook-page"><img src="22.jpg" alt="Page 23"></div>
-        <div class="flipbook-page"><img src="23.jpg" alt="Page 24"></div>
+        <!-- Desktop-only page -->
+        <div class="flipbook-page desktop-only"><img src="22.jpg" alt="Page 22 (Desktop)"></div>
+        <!-- Mobile-only page -->
+        <div class="flipbook-page mobile-only"><img src="22a.jpg" alt="Page 22 (Mobile)"></div>
+        <!-- Desktop-only continuation -->
+        <div class="flipbook-page desktop-only"><img src="23.jpg" alt="Page 23"></div>
         <div class="flipbook-page"><img src="24.jpg" alt="Page 25"></div>
       </div>
     </div>
