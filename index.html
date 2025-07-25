@@ -170,25 +170,34 @@
       if ($('#flipbook').data('turn')) {
         $('#flipbook').turn('destroy').html('');
       }
-
+    
       const isMobile = window.innerWidth < 768;
-
-      const basePages = [];
-      for (let i = 1; i <= 21; i++) {
-        basePages.push(getPageHTML(`${i}.jpg`, `Page ${i}`));
+    
+      const pages = [];
+    
+      // Add pages 1 to 11
+      for (let i = 1; i <= 11; i++) {
+        pages.push(getPageHTML(`${i}.jpg`, `Page ${i}`));
       }
-
+    
+      // Mobile: use 12a only
       if (isMobile) {
-        basePages.push(getPageHTML(`22a.jpg`, `Page 22 (Mobile)`));
+        pages.push(getPageHTML(`12a.jpg`, `Page 12 (Mobile)`));
       } else {
-        basePages.push(getPageHTML(`22.jpg`, `Page 22`));
-        basePages.push(getPageHTML(`23.jpg`, `Page 23`));
+        pages.push(getPageHTML(`12.jpg`, `Page 12`));
+        pages.push(getPageHTML(`13.jpg`, `Page 13`));
       }
-
-      basePages.push(getPageHTML(`24.jpg`, `Page 24`));
-
-      $('#flipbook').html(basePages.join(''));
-
+    
+      // Add pages 14 to 23
+      for (let i = 14; i <= 23; i++) {
+        pages.push(getPageHTML(`${i}.jpg`, `Page ${i}`));
+      }
+    
+      // Add final page 24
+      pages.push(getPageHTML(`24.jpg`, `Page 24`));
+    
+      $('#flipbook').html(pages.join(''));
+    
       $('#flipbook').turn({
         width: isMobile ? $('#flipbook-container').width() : $('#flipbook-container').width() + 16,
         height: $('#flipbook').height(),
@@ -198,6 +207,7 @@
         display: isMobile ? 'single' : 'double'
       });
     }
+
 
     $(function () {
       initFlipbook();
