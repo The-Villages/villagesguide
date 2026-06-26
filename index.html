@@ -70,13 +70,11 @@
     /* WRAPPER: arrows sit outside the container, no overflow issues */
     #flipbook-wrapper {
       display: flex; align-items: center; justify-content: center;
-      gap: 0; width: 100%; max-width: 1080px; padding: 0 10px;
+      gap: 14px; width: 100%; max-width: 1080px; padding: 0 10px;
     }
 
     #flipbook-container {
       flex: 1; min-width: 0; position: relative;
-      /* margin compensates for Turn.js's internal left-offset in double mode */
-      margin: 0 18px;
     }
 
     #flipbook {
@@ -88,15 +86,21 @@
       display: block;
     }
 
-    /* Shadow on .flipbook-page (your own div, always in DOM at rest AND during turns).
-       Turn.js moves .turn-page wrappers around but .flipbook-page stays inside them.
-       drop-shadow on the container follows the actual rendered page shape. */
+    /* Shadow on each individual .turn-page so:
+       - page 1 (cover, right-side only) gets shadow only on its edges
+       - last page (left-side only) same
+       - middle spreads: both pages shadowed, inner edges overlap naturally
+         creating a subtle gutter darkening with no fake line */
+    #flipbook .turn-page {
+      box-shadow:
+        0 3px 8px  rgba(0,0,0,0.13),
+        0 10px 28px rgba(0,0,0,0.14),
+        0 1px 3px  rgba(0,0,0,0.08);
+    }
+
     .flipbook-page {
       background: white; height: 100%; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      box-shadow:
-        0 2px 6px  rgba(0,0,0,0.12),
-        0 8px 24px rgba(0,0,0,0.14);
     }
     .flipbook-page img {
       width: 100%; height: 100%; object-fit: contain; display: block;
@@ -168,16 +172,16 @@
       #flipbook-container {
         width: 100%;
         border-radius: 0;
-        margin: 0;
       }
 
-      .flipbook-page { box-shadow: none; }
+      #flipbook .turn-page { box-shadow: none; }
 
       #flipbook {
         max-height: calc(100svh - 52px - 72px);
         width: 100%;
       }
 
+      #spine-overlay { display: none; }
       #page-counter, #keyboard-hint, footer { display: none; }
 
       /* MOBILE BOTTOM BAR */
@@ -384,20 +388,9 @@
 
       var containerW = $('#flipbook-container').width();
 
-      // Turn.js sets an inline width on #flipbook equal to what we pass here.
-      // We pass containerW exactly -- no +16 fudge -- so it never overflows
-      // the container and pushes into the arrow buttons.
-      var turnW = isMobile ? containerW : containerW;
-      var turnH = Math.round(containerW * 20 / 13);
-      var maxH  = Math.round(window.innerHeight * 0.80);
-      if (turnH > maxH) {
-        turnH = maxH;
-        turnW = Math.round(maxH * 13 / 20);
-      }
-
       $('#flipbook').turn({
-        width:      turnW,
-        height:     turnH,
+        width:      isMobile ? containerW : containerW + 16,
+        height:     $('#flipbook').height(),
         autoCenter: true,
         elevation:  50,
         gradients:  !isMobile,
