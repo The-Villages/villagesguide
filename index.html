@@ -5,37 +5,133 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Villages Guide | ASU Polytechnic</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0 auto;
       font-family: "Segoe UI", Roboto, sans-serif;
-      background: #e6e6e6;
+      background: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
+    /* ── Header ── */
     header {
-      background-color: #8C1D40;
+      background: #8C1D40;
       color: white;
-      padding: 1rem;
-      text-align: center;
-      font-size: 2.2rem;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .header-text {
+      font-size: 1.15rem;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+    }
+
+    .header-sub {
+      font-size: 0.75rem;
+      font-weight: 400;
+      opacity: 0.75;
+    }
+
+    .header-download {
+      background: #FFC627;
+      color: #1a1a1a;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 999px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background 0.18s, transform 0.1s;
+      flex-shrink: 0;
+    }
+
+    .header-download:hover { background: #ffd55a; }
+    .header-download:active { transform: scale(0.97); }
+
+    /* ── Loading state ── */
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 999;
+      transition: opacity 0.3s ease;
+    }
+
+    #loading-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid #ddd;
+      border-top-color: #8C1D40;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-text {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    /* ── Main flipbook area ── */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0 10px;
     }
 
     #flipbook-wrapper {
       display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 20px 0;
+      justify-content: center;
+      gap: 0;
+      width: 100%;
+      max-width: 1060px;
+      padding: 0 8px;
+      position: relative;
     }
 
     #flipbook-container {
-      width: 100%;
-      max-width: 1000px;
-      margin: 0 auto;
+      flex: 1;
+      min-width: 0;
       position: relative;
     }
 
@@ -54,7 +150,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .flipbook-page img {
@@ -63,163 +158,251 @@
       object-fit: contain;
     }
 
+    /* ── Nav arrows ── */
     .nav-arrow {
-      background: transparent;
-      border: none;
-      color: #444;
-      font-size: 3rem;
+      background: white;
+      border: 1.5px solid #ddd;
+      color: #555;
+      font-size: 1.3rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       cursor: pointer;
-      z-index: 100;
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
-    #prev {
-      left: 10px;
-    }
-
-    #next {
-      right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background 0.15s, color 0.15s, box-shadow 0.15s, transform 0.1s;
+      z-index: 10;
+      position: relative;
     }
 
     .nav-arrow:hover {
-      color: #222;
+      background: #8C1D40;
+      color: white;
+      border-color: #8C1D40;
+      box-shadow: 0 4px 14px rgba(140,29,64,0.25);
     }
 
+    .nav-arrow:active { transform: scale(0.94); }
+
+    .nav-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── Page counter ── */
+    #page-counter {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 0.82rem;
+      color: #888;
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+
+    /* ── Keyboard hint ── */
+    #keyboard-hint {
+      text-align: center;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: #aaa;
+    }
+
+    #keyboard-hint kbd {
+      background: #eee;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-size: 0.7rem;
+      font-family: inherit;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 0.72rem;
+      color: #aaa;
+    }
+
+    /* ── Turn.js overrides ── */
     #flipbook .turn-page img {
       width: 100% !important;
       height: 100% !important;
       object-fit: contain !important;
     }
 
-    #flipbook .page-wrapper {
-      margin: 0 !important;
-      padding: 0 !important;
-      gap: 0 !important;
-    }
-
+    /* ── Responsive ── */
     @media (max-width: 768px) {
-      header {
-        font-size: 1.6rem;
-        padding: 0.8rem;
-      }
-
-      #flipbook {
-        max-width: 100%;
-        max-height: 82vh;
-        margin: 0 auto;
-      }
+      header { padding: 0.7rem 1rem; }
+      .header-text { font-size: 1rem; }
+      .header-logo { height: 28px; }
+      .header-download { padding: 0.4rem 0.85rem; font-size: 0.8rem; }
 
       .nav-arrow {
-        font-size: 2.2rem;
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+      }
+
+      #prev { left: 4px; }
+      #next { right: 4px; }
+
+      #flipbook-wrapper {
+        position: relative;
+        padding: 0;
       }
     }
 
     @media (max-width: 500px) {
-      header {
-        font-size: 1.4rem;
-        padding: 0.6rem;
-      }
-
-      .nav-arrow {
-        font-size: 2rem;
-      }
-    }
-
-    .bottom-download-wrapper {
-      text-align: center;
-      margin: 5px auto 30px;
-    }
-
-    .bottom-download-btn {
-      background-color: #FFC627;
-      color: #333;
-      padding: 0.4rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-      border-radius: 999px;
-      text-decoration: none;
-      transition: background 0.2s ease;
-    }
-
-    .bottom-download-btn:hover {
-      background-color: #8C1D40;
-      color: #ffffff;
+      .header-sub { display: none; }
+      .header-divider { display: none; }
     }
   </style>
-  <script src="js/jquery.min.js"></script>
-  <script src="js/turn.min.js"></script>
 </head>
 <body>
-  <header>Villages Guide | ASU Polytechnic</header>
-  <div id="flipbook-wrapper">
-    <button id="prev" class="nav-arrow">&#10094;</button>
-    <div id="flipbook-container">
-      <div id="flipbook"></div>
-    </div>
-    <button id="next" class="nav-arrow">&#10095;</button>
+
+  <!-- Loading overlay -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <p class="loading-text">Loading guide...</p>
   </div>
 
+  <!-- Header -->
+  <header>
+    <div class="header-brand">
+      <img
+        class="header-logo"
+        src="https://www.asu.edu/asuthemes/5.0/assets/arizona-state-university-logo-white.png"
+        alt="ASU logo"
+        onerror="this.style.display='none'"
+      />
+      <div class="header-divider"></div>
+      <div>
+        <div class="header-text">Villages Guide</div>
+        <div class="header-sub">ASU Polytechnic Campus</div>
+      </div>
+    </div>
+    <a href="villagesguide.pdf" download class="header-download">&#8595; Download PDF</a>
+  </header>
+
+  <!-- Flipbook -->
+  <main>
+    <div id="flipbook-wrapper">
+      <button id="prev" class="nav-arrow" aria-label="Previous page">&#10094;</button>
+      <div id="flipbook-container">
+        <div id="flipbook"></div>
+      </div>
+      <button id="next" class="nav-arrow" aria-label="Next page">&#10095;</button>
+    </div>
+
+    <div id="page-counter">Page 1</div>
+    <div id="keyboard-hint">Use <kbd>←</kbd> <kbd>→</kbd> arrow keys to navigate</div>
+  </main>
+
+  <footer>
+    ASU Polytechnic &bull; Villages Housing Guide
+  </footer>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/turn.min.js"></script>
   <script>
+    let totalPages = 0;
+
+    function updateCounter() {
+      const page = $('#flipbook').turn('page');
+      const display = $('#flipbook').turn('display');
+      if (display === 'double') {
+        const p2 = page + 1;
+        if (p2 <= totalPages) {
+          $('#page-counter').text('Pages ' + page + ' - ' + p2 + ' of ' + totalPages);
+        } else {
+          $('#page-counter').text('Page ' + page + ' of ' + totalPages);
+        }
+      } else {
+        $('#page-counter').text('Page ' + page + ' of ' + totalPages);
+      }
+
+      $('#prev').prop('disabled', page <= 1);
+      $('#next').prop('disabled', page >= totalPages);
+    }
+
     function getPageHTML(src, alt) {
-      return `<div class="flipbook-page"><img src="${src}" alt="${alt}"></div>`;
+      return '<div class="flipbook-page"><img src="' + src + '" alt="' + alt + '" loading="lazy"></div>';
     }
 
     function initFlipbook() {
       if ($('#flipbook').data('turn')) {
         $('#flipbook').turn('destroy').html('');
       }
-    
+
       const isMobile = window.innerWidth < 768;
-    
       const pages = [];
-    
-      // Add pages 1 to 11
+
       for (let i = 1; i <= 11; i++) {
-        pages.push(getPageHTML(`${i}.jpg`, `Page ${i}`));
+        pages.push(getPageHTML(i + '.jpg', 'Page ' + i));
       }
-    
-      // Mobile: use 12a only
+
       if (isMobile) {
-        pages.push(getPageHTML(`12a.jpg`, `Page 12 (Mobile)`));
+        pages.push(getPageHTML('12a.jpg', 'Page 12'));
       } else {
-        pages.push(getPageHTML(`12.jpg`, `Page 12`));
-        pages.push(getPageHTML(`13.jpg`, `Page 13`));
+        pages.push(getPageHTML('12.jpg', 'Page 12'));
+        pages.push(getPageHTML('13.jpg', 'Page 13'));
       }
-    
-      // Add pages 14 to 23
-      for (let i = 14; i <= 23; i++) {
-        pages.push(getPageHTML(`${i}.jpg`, `Page ${i}`));
+
+      for (let i = 14; i <= 24; i++) {
+        pages.push(getPageHTML(i + '.jpg', 'Page ' + i));
       }
-    
-      // Add final page 24
-      pages.push(getPageHTML(`24.jpg`, `Page 24`));
-    
+
+      totalPages = pages.length;
       $('#flipbook').html(pages.join(''));
-    
+
       $('#flipbook').turn({
-        width: isMobile ? $('#flipbook-container').width() : $('#flipbook-container').width() + 16,
+        width: isMobile
+          ? $('#flipbook-container').width()
+          : $('#flipbook-container').width() + 16,
         height: $('#flipbook').height(),
         autoCenter: true,
         elevation: 50,
         gradients: true,
-        display: isMobile ? 'single' : 'double'
+        display: isMobile ? 'single' : 'double',
+        when: {
+          turned: function () { updateCounter(); }
+        }
       });
-    }
 
+      updateCounter();
+
+      // Hide loader once flipbook is ready
+      $('#loading-overlay').addClass('hidden');
+    }
 
     $(function () {
       initFlipbook();
+
       $('#prev').click(() => $('#flipbook').turn('previous'));
       $('#next').click(() => $('#flipbook').turn('next'));
-      $(window).on('resize', () => initFlipbook());
+
+      // Keyboard navigation
+      $(document).keydown(function (e) {
+        if (e.key === 'ArrowLeft') $('#flipbook').turn('previous');
+        if (e.key === 'ArrowRight') $('#flipbook').turn('next');
+      });
+
+      let resizeTimer;
+      $(window).on('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(initFlipbook, 200);
+      });
     });
   </script>
 
-  <div class="bottom-download-wrapper">
-    <a href="villagesguide.pdf" download class="bottom-download-btn">Download PDF</a>
-  </div>
 </body>
 </html>
