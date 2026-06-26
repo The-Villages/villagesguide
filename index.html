@@ -75,6 +75,9 @@
 
     #flipbook-container {
       flex: 1; min-width: 0; position: relative;
+      filter:
+        drop-shadow(0 2px 4px rgba(0,0,0,0.10))
+        drop-shadow(0 8px 24px rgba(0,0,0,0.15));
     }
 
     #flipbook {
@@ -84,18 +87,6 @@
       max-height: 80vh;
       margin: auto;
       display: block;
-    }
-
-    /* Shadow on each individual .turn-page so:
-       - page 1 (cover, right-side only) gets shadow only on its edges
-       - last page (left-side only) same
-       - middle spreads: both pages shadowed, inner edges overlap naturally
-         creating a subtle gutter darkening with no fake line */
-    #flipbook .turn-page {
-      box-shadow:
-        0 3px 8px  rgba(0,0,0,0.13),
-        0 10px 28px rgba(0,0,0,0.14),
-        0 1px 3px  rgba(0,0,0,0.08);
     }
 
     .flipbook-page {
@@ -172,16 +163,14 @@
       #flipbook-container {
         width: 100%;
         border-radius: 0;
+        filter: none;
       }
-
-      #flipbook .turn-page { box-shadow: none; }
 
       #flipbook {
         max-height: calc(100svh - 52px - 72px);
         width: 100%;
       }
 
-      #spine-overlay { display: none; }
       #page-counter, #keyboard-hint, footer { display: none; }
 
       /* MOBILE BOTTOM BAR */
@@ -388,9 +377,20 @@
 
       var containerW = $('#flipbook-container').width();
 
+      // Turn.js sets an inline width on #flipbook equal to what we pass here.
+      // We pass containerW exactly -- no +16 fudge -- so it never overflows
+      // the container and pushes into the arrow buttons.
+      var turnW = isMobile ? containerW : containerW;
+      var turnH = Math.round(containerW * 20 / 13);
+      var maxH  = Math.round(window.innerHeight * 0.80);
+      if (turnH > maxH) {
+        turnH = maxH;
+        turnW = Math.round(maxH * 13 / 20);
+      }
+
       $('#flipbook').turn({
-        width:      isMobile ? containerW : containerW + 16,
-        height:     $('#flipbook').height(),
+        width:      turnW,
+        height:     turnH,
         autoCenter: true,
         elevation:  50,
         gradients:  !isMobile,
