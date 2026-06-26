@@ -70,14 +70,13 @@
     /* WRAPPER: arrows sit outside the container, no overflow issues */
     #flipbook-wrapper {
       display: flex; align-items: center; justify-content: center;
-      gap: 14px; width: 100%; max-width: 1080px; padding: 0 10px;
+      gap: 0; width: 100%; max-width: 1080px; padding: 0 10px;
     }
 
     #flipbook-container {
       flex: 1; min-width: 0; position: relative;
-      filter:
-        drop-shadow(0 2px 4px rgba(0,0,0,0.10))
-        drop-shadow(0 8px 24px rgba(0,0,0,0.15));
+      /* margin compensates for Turn.js's internal left-offset in double mode */
+      margin: 0 18px;
     }
 
     #flipbook {
@@ -89,9 +88,15 @@
       display: block;
     }
 
+    /* Shadow on .flipbook-page (your own div, always in DOM at rest AND during turns).
+       Turn.js moves .turn-page wrappers around but .flipbook-page stays inside them.
+       drop-shadow on the container follows the actual rendered page shape. */
     .flipbook-page {
       background: white; height: 100%; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
+      box-shadow:
+        0 2px 6px  rgba(0,0,0,0.12),
+        0 8px 24px rgba(0,0,0,0.14);
     }
     .flipbook-page img {
       width: 100%; height: 100%; object-fit: contain; display: block;
@@ -163,8 +168,10 @@
       #flipbook-container {
         width: 100%;
         border-radius: 0;
-        filter: none;
+        margin: 0;
       }
+
+      .flipbook-page { box-shadow: none; }
 
       #flipbook {
         max-height: calc(100svh - 52px - 72px);
