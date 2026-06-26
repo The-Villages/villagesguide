@@ -70,12 +70,13 @@
     /* WRAPPER */
     #flipbook-wrapper {
       display: flex; align-items: center; justify-content: center;
-      gap: 16px;
+      gap: 20px;
       width: 100%; max-width: 1080px; padding: 0 10px;
     }
 
     #flipbook-container {
       flex: 1; min-width: 0; position: relative;
+      margin-right: 20px;
     }
 
     #flipbook {
@@ -214,26 +215,12 @@
 
       #mob-center {
         flex: 1; display: flex; flex-direction: column;
-        align-items: center; gap: 5px;
+        align-items: center;
       }
 
       #mob-counter {
         color: #555;
         font-size: 0.78rem; letter-spacing: 0.05em;
-      }
-
-      #mob-dots {
-        display: flex; gap: 4px; align-items: center;
-      }
-      .mob-dot {
-        width: 4px; height: 4px; border-radius: 50%;
-        background: rgba(0,0,0,0.15);
-        transition: background 0.2s, transform 0.2s;
-        flex-shrink: 0;
-      }
-      .mob-dot.active {
-        background: #8C1D40;
-        transform: scale(1.5);
       }
 
       #swipe-hint {
@@ -292,7 +279,6 @@
     <button id="mob-prev" class="mob-btn" aria-label="Previous page">&#10094;</button>
     <div id="mob-center">
       <div id="mob-counter">Page 1</div>
-      <div id="mob-dots"></div>
     </div>
     <button id="mob-next" class="mob-btn" aria-label="Next page">&#10095;</button>
   </div>
@@ -303,57 +289,25 @@
   <script src="js/turn.min.js"></script>
   <script>
     var totalPages = 0;
-    var DOT_MAX    = 12;
 
-    function buildDots(total) {
-      var $dots = $('#mob-dots');
-      $dots.empty();
-      var count = Math.min(total, DOT_MAX);
-      for (var i = 0; i < count; i++) {
-        $dots.append('<div class="mob-dot" data-dot="' + i + '"></div>');
-      }
-    }
-
-    function updateDots(page, total) {
-      var count  = Math.min(total, DOT_MAX);
-      var active = Math.round(((page - 1) / Math.max(total - 1, 1)) * (count - 1));
-      $('.mob-dot').removeClass('active');
-      $('[data-dot="' + active + '"]').addClass('active');
-    }
-
-    /* FIX 2: page counter
-       Turn.js double-page mode: page 1 is the cover (single right page),
-       then pages go 2-3, 4-5 ... last page is also single.
-       We show the human-readable spread, not the internal index. */
-    function updateCounter() {
-      if (!$('#flipbook').data('turn')) return;
-
-      var page    = $('#flipbook').turn('page');
-      var display = $('#flipbook').turn('display');
+    function updateCounter(page) {
+      var isMobile = window.innerWidth < 768;
       var label;
-
-      if (display === 'single') {
+      if (isMobile) {
         label = 'Page ' + page + ' of ' + totalPages;
       } else {
-        // Double mode: page 1 is alone, then pairs
-        if (page === 1) {
-          label = 'Page 1 of ' + totalPages;
-        } else if (page + 1 > totalPages) {
+        if (page === 1 || page + 1 > totalPages) {
           label = 'Page ' + page + ' of ' + totalPages;
         } else {
           label = 'Pages ' + page + '\u2013' + (page + 1) + ' of ' + totalPages;
         }
       }
-
       $('#page-counter').text(label);
       $('#mob-counter').text(label);
 
-      var atStart = (page <= 1);
-      var atEnd   = (display === 'double') ? (page + 1 >= totalPages) : (page >= totalPages);
-      $('#prev,#mob-prev').prop('disabled', atStart);
+      $('#prev,#mob-prev').prop('disabled', page <= 1);
+      var atEnd = isMobile ? (page >= totalPages) : (page + 1 >= totalPages);
       $('#next,#mob-next').prop('disabled', atEnd);
-
-      updateDots(page, totalPages);
     }
 
     function getPageHTML(src, alt) {
@@ -361,16 +315,16 @@
     }
 
     function initFlipbook() {
-      if ($('#flipbook').data('turn')) {
-        $('#flipbook').turn('destroy').html('');
+      var $fb = $('#flipbook');
+      if ($fb.data('turn')) {
+        $fb.off('turned');
+        $fb.turn('destroy').html('');
       }
 
-      var isMobile = window.innerWidth < 768;
-      var pages    = [];
+      var isMobile  = window.innerWidth < 768;
+      var pages     = [];
 
-      for (var i = 1; i <= 11; i++) {
-        pages.push(getPageHTML(i + '.jpg', 'Page ' + i));
-      }
+      for (var i = 1; i <= 11; i++) pages.push(getPageHTML(i + '.jpg', 'Page ' + i));
 
       if (isMobile) {
         pages.push(getPageHTML('12a.jpg', 'Page 12'));
@@ -379,43 +333,31 @@
         pages.push(getPageHTML('13.jpg', 'Page 13'));
       }
 
-      for (var j = 14; j <= 24; j++) {
-        pages.push(getPageHTML(j + '.jpg', 'Page ' + j));
-      }
+      for (var j = 14; j <= 24; j++) pages.push(getPageHTML(j + '.jpg', 'Page ' + j));
 
       totalPages = pages.length;
-      $('#flipbook').html(pages.join(''));
-      buildDots(totalPages);
+      $fb.html(pages.join(''));
 
       var containerW = $('#flipbook-container').width();
+      var maxH       = Math.floor(window.innerHeight * 0.80);
+      var bookH      = Math.min(Math.floor(containerW * 20 / 13), maxH);
 
-      // Derive height from the 13:20 aspect ratio instead of reading
-      // #flipbook's height (which is 0 before Turn.js sets it).
-      // Also respect the max-height: 80vh cap.
-      var maxH     = Math.floor(window.innerHeight * 0.80);
-      // In double mode the book is two pages wide so each page is containerW/2
-      // In single mode the book is one page wide = containerW
-      var bookW    = isMobile ? containerW : containerW;
-      var fromRatio = Math.floor(bookW * 20 / 13);
-      var bookH    = Math.min(fromRatio, maxH);
-
-      $('#flipbook').turn({
+      $fb.turn({
         width:      isMobile ? containerW : containerW + 16,
         height:     bookH,
         autoCenter: true,
         elevation:  50,
         gradients:  !isMobile,
-        display:    isMobile ? 'single' : 'double',
-        when: {
-          turned: function() { updateCounter(); }
-        }
+        display:    isMobile ? 'single' : 'double'
       });
 
-      // Defer so Turn.js finishes setting internal state before we read page
-      setTimeout(function() {
-        updateCounter();
-        $('#loading-overlay').addClass('hidden');
-      }, 50);
+      // Bind as jQuery event — this is Turn.js's actual documented event API
+      $fb.on('turned', function(e, page) {
+        updateCounter(page);
+      });
+
+      updateCounter(1);
+      $('#loading-overlay').addClass('hidden');
     }
 
     $(function() {
