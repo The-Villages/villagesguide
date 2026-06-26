@@ -70,16 +70,12 @@
     /* WRAPPER */
     #flipbook-wrapper {
       display: flex; align-items: center; justify-content: center;
+      gap: 16px;
       width: 100%; max-width: 1080px; padding: 0 10px;
     }
 
-    /* FIX 1: right arrow pushed out with margin-right on container.
-       Turn.js offsets the book slightly left internally in double mode,
-       so the right side of the container overflows onto the arrow.
-       margin-right: 56px gives the right arrow its own clear lane. */
     #flipbook-container {
       flex: 1; min-width: 0; position: relative;
-      margin-right: 8px;
     }
 
     #flipbook {
@@ -393,9 +389,19 @@
 
       var containerW = $('#flipbook-container').width();
 
+      // Derive height from the 13:20 aspect ratio instead of reading
+      // #flipbook's height (which is 0 before Turn.js sets it).
+      // Also respect the max-height: 80vh cap.
+      var maxH     = Math.floor(window.innerHeight * 0.80);
+      // In double mode the book is two pages wide so each page is containerW/2
+      // In single mode the book is one page wide = containerW
+      var bookW    = isMobile ? containerW : containerW;
+      var fromRatio = Math.floor(bookW * 20 / 13);
+      var bookH    = Math.min(fromRatio, maxH);
+
       $('#flipbook').turn({
         width:      isMobile ? containerW : containerW + 16,
-        height:     $('#flipbook').height(),
+        height:     bookH,
         autoCenter: true,
         elevation:  50,
         gradients:  !isMobile,
@@ -405,8 +411,11 @@
         }
       });
 
-      updateCounter();
-      $('#loading-overlay').addClass('hidden');
+      // Defer so Turn.js finishes setting internal state before we read page
+      setTimeout(function() {
+        updateCounter();
+        $('#loading-overlay').addClass('hidden');
+      }, 50);
     }
 
     $(function() {
