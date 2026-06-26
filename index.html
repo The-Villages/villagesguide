@@ -67,14 +67,19 @@
       padding: 24px 0 14px;
     }
 
-    /* WRAPPER: arrows sit outside the container, no overflow issues */
+    /* WRAPPER */
     #flipbook-wrapper {
       display: flex; align-items: center; justify-content: center;
-      gap: 14px; width: 100%; max-width: 1080px; padding: 0 10px;
+      width: 100%; max-width: 1080px; padding: 0 10px;
     }
 
+    /* FIX 1: right arrow pushed out with margin-right on container.
+       Turn.js offsets the book slightly left internally in double mode,
+       so the right side of the container overflows onto the arrow.
+       margin-right: 56px gives the right arrow its own clear lane. */
     #flipbook-container {
       flex: 1; min-width: 0; position: relative;
+      margin-right: 8px;
     }
 
     #flipbook {
@@ -86,11 +91,6 @@
       display: block;
     }
 
-    /* Shadow on each individual .turn-page so:
-       - page 1 (cover, right-side only) gets shadow only on its edges
-       - last page (left-side only) same
-       - middle spreads: both pages shadowed, inner edges overlap naturally
-         creating a subtle gutter darkening with no fake line */
     #flipbook .turn-page {
       box-shadow:
         0 3px 8px  rgba(0,0,0,0.13),
@@ -144,9 +144,9 @@
       object-fit: contain !important;
     }
 
-    /* ─── MOBILE ─────────────────────────────── */
+    /* MOBILE */
     @media (max-width: 767px) {
-      body { background: #1c1c1e; }
+      body { background: #f2f2f2; }
 
       header { padding: 0.6rem 0.9rem; }
       .header-logo  { height: 26px; }
@@ -161,17 +161,17 @@
       }
 
       #flipbook-wrapper {
-        gap: 0; padding: 0;
+        padding: 0;
         width: 100%; max-width: 100%;
         align-items: flex-start;
       }
 
-      /* Desktop arrows hidden on mobile */
       #prev, #next { display: none; }
 
       #flipbook-container {
         width: 100%;
         border-radius: 0;
+        margin-right: 0;
       }
 
       #flipbook .turn-page { box-shadow: none; }
@@ -181,17 +181,16 @@
         width: 100%;
       }
 
-      #spine-overlay { display: none; }
       #page-counter, #keyboard-hint, footer { display: none; }
 
-      /* MOBILE BOTTOM BAR */
+      /* MOBILE BOTTOM BAR — light theme */
       #mobile-bar {
         position: fixed; bottom: 0; left: 0; right: 0;
         height: 72px;
-        background: rgba(28,28,30,0.96);
+        background: rgba(255,255,255,0.95);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        border-top: 1px solid rgba(255,255,255,0.08);
+        border-top: 1px solid rgba(0,0,0,0.08);
         display: flex; align-items: center;
         justify-content: space-between;
         padding: 0 20px; z-index: 100;
@@ -199,9 +198,9 @@
       }
 
       .mob-btn {
-        background: rgba(255,255,255,0.08);
-        border: 1px solid rgba(255,255,255,0.14);
-        color: #f0f0f0;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        color: #333;
         width: 56px; height: 46px;
         border-radius: 12px; font-size: 1.2rem;
         cursor: pointer; display: flex;
@@ -212,40 +211,39 @@
       .mob-btn:active {
         background: #8C1D40;
         border-color: #8C1D40;
+        color: white;
         transform: scale(0.93);
       }
-      .mob-btn:disabled { opacity: 0.2; pointer-events: none; }
+      .mob-btn:disabled { opacity: 0.25; pointer-events: none; }
 
       #mob-center {
         flex: 1; display: flex; flex-direction: column;
-        align-items: center; gap: 4px;
+        align-items: center; gap: 5px;
       }
 
       #mob-counter {
-        color: rgba(255,255,255,0.75);
+        color: #555;
         font-size: 0.78rem; letter-spacing: 0.05em;
       }
 
-      /* Progress dots */
       #mob-dots {
         display: flex; gap: 4px; align-items: center;
       }
       .mob-dot {
         width: 4px; height: 4px; border-radius: 50%;
-        background: rgba(255,255,255,0.22);
+        background: rgba(0,0,0,0.15);
         transition: background 0.2s, transform 0.2s;
         flex-shrink: 0;
       }
       .mob-dot.active {
-        background: #FFC627;
-        transform: scale(1.4);
+        background: #8C1D40;
+        transform: scale(1.5);
       }
 
-      /* Swipe hint pill */
       #swipe-hint {
         position: fixed; bottom: 84px; left: 50%;
         transform: translateX(-50%);
-        background: rgba(0,0,0,0.72); color: white;
+        background: rgba(0,0,0,0.6); color: white;
         font-size: 0.72rem; padding: 7px 16px;
         border-radius: 999px; z-index: 101;
         opacity: 1; transition: opacity 0.6s ease;
@@ -308,11 +306,9 @@
   <script src="js/jquery.min.js"></script>
   <script src="js/turn.min.js"></script>
   <script>
-    var totalPages   = 0;
-    var mapPageStart = -1;
-    var DOT_MAX      = 12;
+    var totalPages = 0;
+    var DOT_MAX    = 12;
 
-    /* ─── Dots progress indicator (mobile) ──────────────────────── */
     function buildDots(total) {
       var $dots = $('#mob-dots');
       $dots.empty();
@@ -323,23 +319,36 @@
     }
 
     function updateDots(page, total) {
-      var count = Math.min(total, DOT_MAX);
-      var active = Math.round(((page - 1) / (total - 1)) * (count - 1));
+      var count  = Math.min(total, DOT_MAX);
+      var active = Math.round(((page - 1) / Math.max(total - 1, 1)) * (count - 1));
       $('.mob-dot').removeClass('active');
       $('[data-dot="' + active + '"]').addClass('active');
     }
 
-    /* ─── Counter + button state ─────────────────────────────────── */
+    /* FIX 2: page counter
+       Turn.js double-page mode: page 1 is the cover (single right page),
+       then pages go 2-3, 4-5 ... last page is also single.
+       We show the human-readable spread, not the internal index. */
     function updateCounter() {
       if (!$('#flipbook').data('turn')) return;
+
       var page    = $('#flipbook').turn('page');
       var display = $('#flipbook').turn('display');
       var label;
-      if (display === 'double' && page + 1 <= totalPages) {
-        label = 'Pages ' + page + '\u2013' + (page + 1) + ' of ' + totalPages;
-      } else {
+
+      if (display === 'single') {
         label = 'Page ' + page + ' of ' + totalPages;
+      } else {
+        // Double mode: page 1 is alone, then pairs
+        if (page === 1) {
+          label = 'Page 1 of ' + totalPages;
+        } else if (page + 1 > totalPages) {
+          label = 'Page ' + page + ' of ' + totalPages;
+        } else {
+          label = 'Pages ' + page + '\u2013' + (page + 1) + ' of ' + totalPages;
+        }
       }
+
       $('#page-counter').text(label);
       $('#mob-counter').text(label);
 
@@ -351,20 +360,17 @@
       updateDots(page, totalPages);
     }
 
-    /* ─── Page HTML builder ──────────────────────────────────────── */
     function getPageHTML(src, alt) {
       return '<div class="flipbook-page"><img src="' + src + '" alt="' + alt + '" loading="lazy"></div>';
     }
 
-    /* ─── Init ───────────────────────────────────────────────────── */
     function initFlipbook() {
       if ($('#flipbook').data('turn')) {
         $('#flipbook').turn('destroy').html('');
       }
 
       var isMobile = window.innerWidth < 768;
-      var pages = [];
-      mapPageStart = -1;
+      var pages    = [];
 
       for (var i = 1; i <= 11; i++) {
         pages.push(getPageHTML(i + '.jpg', 'Page ' + i));
@@ -373,7 +379,6 @@
       if (isMobile) {
         pages.push(getPageHTML('12a.jpg', 'Page 12'));
       } else {
-        mapPageStart = pages.length + 1; // 1-based
         pages.push(getPageHTML('12.jpg', 'Page 12'));
         pages.push(getPageHTML('13.jpg', 'Page 13'));
       }
@@ -417,7 +422,6 @@
         if (e.key === 'ArrowRight') $('#flipbook').turn('next');
       });
 
-      // Touch swipe
       var touchStartX = 0;
       document.getElementById('flipbook').addEventListener('touchstart', function(e) {
         touchStartX = e.touches[0].clientX;
@@ -430,14 +434,12 @@
         }
       }, { passive: true });
 
-      // Reposition spine on window resize (debounced)
       var resizeTimer;
       $(window).on('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(initFlipbook, 220);
       });
 
-      // Swipe hint fades after 3.5s
       setTimeout(function() {
         var h = document.getElementById('swipe-hint');
         if (h) h.classList.add('fade');
