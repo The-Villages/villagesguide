@@ -21,8 +21,6 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
 
-      - run: npm install sharp
-
       - name: Pull from Canva
         env:
           CANVA_CLIENT_ID:     ${{ secrets.CANVA_CLIENT_ID }}
