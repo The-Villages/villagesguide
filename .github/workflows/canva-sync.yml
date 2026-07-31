@@ -1,0 +1,54 @@
+name: Sync from Canva
+
+on:
+  schedule:
+    - cron: '0 * * * *'      # hourly
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: canva-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - run: npm install sharp
+
+      - name: Pull from Canva
+        env:
+          CANVA_CLIENT_ID:     ${{ secrets.CANVA_CLIENT_ID }}
+          CANVA_CLIENT_SECRET: ${{ secrets.CANVA_CLIENT_SECRET }}
+          CANVA_REFRESH_TOKEN: ${{ secrets.CANVA_REFRESH_TOKEN }}
+          CANVA_DESIGN_ID:     ${{ secrets.CANVA_DESIGN_ID }}
+        run: node scripts/sync.mjs
+
+      - name: Rotate refresh token
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.SECRETS_PAT }}
+        run: |
+          if [ -f .new-refresh-token ]; then
+            gh secret set CANVA_REFRESH_TOKEN \
+              --body "$(cat .new-refresh-token)" \
+              --repo ${{ github.repository }}
+            rm .new-refresh-token
+          fi
+
+      - name: Commit
+        run: |
+          if [ "$(cat .changed 2>/dev/null)" != "true" ]; then exit 0; fi
+          rm -f .changed
+          git config user.name  "canva-bot"
+          git config user.email "canva-bot@users.noreply.github.com"
+          git add -A ':!node_modules' ':!package-lock.json'
+          git diff --staged --quiet || git commit -m "Sync guide from Canva"
+          git push
