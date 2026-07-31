@@ -69,7 +69,7 @@ async function save(url, path) {
 }
 
 // --- export all pages as JPG, high quality (returned in Canva page order) ---
-const pages = await exportDesign({ type: 'jpg', quality: 'regular' });
+const pages = await exportDesign({ type: 'jpg', quality: 100, export_quality: 'regular' });
 console.log(`Canva returned ${pages.length} raw pages`);
 
 if (pages.length < 26) {
