@@ -41,16 +41,23 @@ if (stamp && stamp === last) {
 
 // --- export helper ---
 async function exportDesign(format) {
-  const job = await (await fetch(`${API}/exports`, {
+  const res = await fetch(`${API}/exports`, {
     method: 'POST',
     headers: { ...H, 'Content-Type': 'application/json' },
     body: JSON.stringify({ design_id: DESIGN, format })
-  })).json();
+  });
+  const job = await res.json();
+
+  if (!job.job) {
+    throw new Error(`Export request rejected (${res.status}): ${JSON.stringify(job)}`);
+  }
 
   let id = job.job.id, state = job.job;
   while (state.status === 'in_progress') {
     await sleep(2500);
-    state = (await (await fetch(`${API}/exports/${id}`, { headers: H })).json()).job;
+    const poll = await (await fetch(`${API}/exports/${id}`, { headers: H })).json();
+    if (!poll.job) throw new Error(`Poll failed: ${JSON.stringify(poll)}`);
+    state = poll.job;
   }
   if (state.status !== 'success') throw new Error(JSON.stringify(state.error));
   return state.urls;
@@ -62,8 +69,7 @@ async function save(url, path) {
 }
 
 // --- export all pages as JPG, high quality (returned in Canva page order) ---
-// quality: 'pro' requires a Canva Pro plan. If you are not on Pro, change this to 'regular'.
-const pages = await exportDesign({ type: 'jpg', quality: 'pro' });
+const pages = await exportDesign({ type: 'jpg', quality: 'regular' });
 console.log(`Canva returned ${pages.length} raw pages`);
 
 if (pages.length < 26) {
