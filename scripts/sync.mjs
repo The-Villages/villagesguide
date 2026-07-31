@@ -1,5 +1,4 @@
 import fs from 'node:fs/promises';
-import sharp from 'sharp';
 
 const {
   CANVA_CLIENT_ID: ID,
@@ -11,7 +10,7 @@ const {
 const API = 'https://api.canva.com/rest/v1';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// --- refresh access token (rotates RT) ---
+// --- refresh access token (this rotates the refresh token) ---
 const tok = await (await fetch(`${API}/oauth/token`, {
   method: 'POST',
   headers: {
@@ -23,7 +22,7 @@ const tok = await (await fetch(`${API}/oauth/token`, {
 
 if (!tok.access_token) throw new Error('Token refresh failed: ' + JSON.stringify(tok));
 
-// Hand the rotated token back to the workflow immediately
+// Hand the rotated token back to the workflow immediately, before anything else can fail
 await fs.writeFile('.new-refresh-token', tok.refresh_token);
 
 const H = { Authorization: `Bearer ${tok.access_token}` };
@@ -35,7 +34,7 @@ let last = '';
 try { last = (await fs.readFile('.canva-state', 'utf8')).trim(); } catch {}
 
 if (stamp && stamp === last) {
-  console.log('No changes. Exiting.');
+  console.log('No changes since last sync. Exiting.');
   await fs.writeFile('.changed', 'false');
   process.exit(0);
 }
@@ -62,27 +61,37 @@ async function save(url, path) {
   await fs.writeFile(path, buf);
 }
 
-// --- pages (URLs come back in page order) ---
-const pages = await exportDesign({ type: 'jpg', quality: 90 });
-console.log(`Exporting ${pages.length} pages`);
-for (let i = 0; i < pages.length; i++) await save(pages[i], `${i + 1}.jpg`);
+// --- export all pages as JPG, high quality (returned in Canva page order) ---
+// quality: 'pro' requires a Canva Pro plan. If you are not on Pro, change this to 'regular'.
+const pages = await exportDesign({ type: 'jpg', quality: 'pro' });
+console.log(`Canva returned ${pages.length} raw pages`);
 
-// --- PDF ---
+if (pages.length < 26) {
+  throw new Error(`Expected at least 26 pages in Canva (1-24 normal, 25/26 map halves), got ${pages.length}. Check the design hasn't been reordered.`);
+}
+
+// --- remap Canva's 26-page layout to the site's expected 24-page layout ---
+// Canva 1-11   -> output 1-11        (unchanged)
+// Canva 12     -> output 12a.jpg     (mobile full map)
+// Canva 13     -> discarded          (duplicate of 12, exists only for Canva-side naming)
+// Canva 14-24  -> output 14-24       (unchanged)
+// Canva 25     -> output 12.jpg      (PC left half of big map)
+// Canva 26     -> output 13.jpg      (PC right half of big map)
+
+for (let i = 1; i <= 11; i++) await save(pages[i - 1], `${i}.jpg`);
+await save(pages[11], '12a.jpg');       // Canva page 12
+// pages[12] (Canva page 13) intentionally skipped
+for (let i = 14; i <= 24; i++) await save(pages[i - 1], `${i}.jpg`);
+await save(pages[24], '12.jpg');        // Canva page 25
+await save(pages[25], '13.jpg');        // Canva page 26
+
+// --- export PDF (this stays in true Canva order, 26 pages, which is fine for the download link) ---
 const [pdf] = await exportDesign({ type: 'pdf' });
 await save(pdf, 'villagesguide.pdf');
 
-// --- stitch the mobile map: 12 + 13 side by side ---
-const m = await sharp('12.jpg').metadata();
-await sharp({
-  create: { width: m.width * 2, height: m.height, channels: 3, background: '#ffffff' }
-})
-  .composite([
-    { input: '12.jpg', left: 0, top: 0 },
-    { input: '13.jpg', left: m.width, top: 0 }
-  ])
-  .jpeg({ quality: 90 })
-  .toFile('12a.jpg');
+// --- page count for the site (24 real pages) ---
+await fs.writeFile('pages.json', JSON.stringify({ count: 24, mapSpread: [12, 13] }, null, 2));
 
 await fs.writeFile('.canva-state', stamp);
 await fs.writeFile('.changed', 'true');
-console.log(`Done. ${pages.length} pages + PDF + stitched map.`);
+console.log('Done. 24 pages remapped + PDF.');
